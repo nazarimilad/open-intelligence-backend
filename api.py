@@ -3,6 +3,7 @@ from flask import Flask, request, flash
 from flask_restful import Resource, Api
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from pathlib import Path
 
 UPLOAD_FOLDER = "./uploads"
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg",])
@@ -13,6 +14,9 @@ app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["SECRET_KEY"] = "pojzdoandoiaxuqpsokmqd"
 CORS(app)
 api = Api(app)
+
+def prepare_server():
+    Path(app.config["UPLOAD_FOLDER"]).mkdir(parents=True, exist_ok=True)
 
 def allowed_file(filename):
     return "." in filename and \
@@ -36,6 +40,7 @@ def analyse_table():
         return {"file": "saved"}
 
 if __name__ == "__main__":
+    prepare_server()
     app.run(debug=True)
 
 
