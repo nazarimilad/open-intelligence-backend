@@ -22,22 +22,33 @@ def allowed_file(filename):
     return "." in filename and \
            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/detection/table', methods=['POST'])
-def analyse_table():
+def validate_file(request):
     # check if the post request has the file part
+    print("request 2:")
+    print(request)
     if "file" not in request.files:
         flash("No file part")
-        return {"file": "not saved 1"}
+        raise ValueError("No file selected")
     file = request.files["file"]
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == "":
         flash("No selected file")
-        return {"file": "not saved 2"}
+        raise ValueError("File name is not valid")
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
+        return file, filename
+
+@app.route('/detection/table', methods=['POST'])
+def analyse_table():
+    try:
+        print("request 1:")
+        print(request)
+        file, filename = validate_file(request)
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         return {"file": "saved"}
+    except ValueError as err:
+        return {"error": str(err)}
 
 if __name__ == "__main__":
     prepare_server()
