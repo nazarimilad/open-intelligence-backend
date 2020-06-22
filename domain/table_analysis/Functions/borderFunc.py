@@ -50,7 +50,7 @@ def extract_table(table_body,__line__,lines=None):
         for x,y in point:
             cv2.line(table,(x,y),(x,y),(0,0,255),8)
 
-    cv2.imwrite("temp/intersection.png", table)
+    cv2.imwrite("temp/intersections.png", table)
 
     # boxno = -1
     box = []

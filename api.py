@@ -4,26 +4,29 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
-from domain.table_analysis.table_analyser import TableAnalyser
+#from domain.table_analysis.table_analyser import TableAnalyser
 
 UPLOAD_FOLDER = "./temp"
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg",])
-
-app = Flask(__name__)
+host = "localhost"
+port = 5000
+app = Flask(__name__, static_folder="temp", static_url_path='/assets')
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["SECRET_KEY"] = "pojzdoandoiaxuqpsokmqd"
 CORS(app)
 api = Api(app)
 
-table_analyser: TableAnalyser = None
+#table_analyser: TableAnalyser = None
 
 def prepare_server():
     Path(app.config["UPLOAD_FOLDER"]).mkdir(parents=True, exist_ok=True)
+    """
     global table_analyser
     table_analyser = TableAnalyser("domain/config/cascade_mask_rcnn_hrnetv2p_w32_20e.py",
                                    "domain/table_analysis/model/epoch_36.pth",
                                    app.config["UPLOAD_FOLDER"])
+                                   """
 
 def is_file_extension_allowed(filename):
     return "." in filename and \
@@ -53,13 +56,22 @@ def analyse_table():
         file, filename = validate_file(request)
     except ValueError as err:
         return {"error": str(err)}
-    filename = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-    file.save(filename)
-    table_analyser.analyse(filename)
-    return {"file": "saved"}
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    #table_analyser.analyse(filename)
+    url = "http://" + host + ":" + str(port) + "/assets/"
+    return {
+        "processing": [
+            {"Original": url + filename},
+            {"Detected table": url + "detected_table.png"},
+            {"Intersections": url + "intersections.png"},
+            {"Text chunks": url + "text_chunks.png"},
+        ],
+        "xml_result": url + "result.xml",
+    }
 
 if __name__ == "__main__":
     prepare_server()
-    app.run(debug=True, host="0.0.0.0")
+    #app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)
 
 
