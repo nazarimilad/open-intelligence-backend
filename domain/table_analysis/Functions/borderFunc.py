@@ -17,11 +17,11 @@ def line_intersection(x1, y1, x2, y2, x3, y3, x4, y4):
 ## main extraction function ##
 # Input : Image, Decision parameter(1/0),lines for borderless (only of decision parameter is 0)
 # Output : Array of cells
-def extract_table(table_body,__line__,lines=None):
+def extract_table(table_body,__line__,lines=None, work_folder_path=None):
     # Deciding variable
     if(__line__ == 1 ):
     # Check if table image is  bordered or borderless
-        temp_lines_hor, temp_lines_ver = line_detection(table_body)
+        temp_lines_hor, temp_lines_ver = line_detection(table_body, work_folder_path)
     else:
         temp_lines_hor, temp_lines_ver = lines
 
@@ -50,7 +50,7 @@ def extract_table(table_body,__line__,lines=None):
         for x,y in point:
             cv2.line(table,(x,y),(x,y),(0,0,255),8)
 
-    cv2.imwrite("temp/intersections.png", table)
+    cv2.imwrite(work_folder_path + "/intersections.png", table)
 
     # boxno = -1
     box = []
@@ -117,8 +117,6 @@ def extract_table(table_body,__line__,lines=None):
     # cv2.waitKey(0)
     ############################
     return box
-# extract_table(cv2.imread("E:\\KSK\\KSK ML\\KSK PAPERS\\TabXNet\\For Git\\images\\table.PNG"),1,lines=None)
-
 
 def findX(X,x):
     return X.index(x)

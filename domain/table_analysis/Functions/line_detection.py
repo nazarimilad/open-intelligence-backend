@@ -3,13 +3,13 @@ import numpy as np
 
 # Input : Image
 # Output : hor,ver 
-def line_detection(image):
+def line_detection(image, work_folder_path):
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     bw = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 15, 1)
     bw = cv2.bitwise_not(bw)
     ## To visualize image after thresholding ##
-    cv2.imwrite("temp/thresholding_bw.png", bw)
+    cv2.imwrite(work_folder_path + "/thresholding_bw.png", bw)
     ###########################################
     horizontal = bw.copy()
     vertical = bw.copy()
@@ -63,7 +63,7 @@ def line_detection(image):
             lines_x1.append(x1)
             lines_x2.append(x2)
         else:
-            if (i != 0 and len(lines_x1) is not 0):
+            if (i != 0 and len(lines_x1) != 0):
                 hor.append([min(lines_x1),lasty1,max(lines_x2),lasty1])
             lasty1 = y1
             lines_x1 = []
@@ -130,7 +130,7 @@ def line_detection(image):
             # lasty1 = y1
             # lasty2 = y2
         else:
-            if (count != 0 and len(lines_y1) is not 0):
+            if (count != 0 and len(lines_y1) != 0):
                 ver.append([lastx1,min(lines_y2)-5,lastx1,max(lines_y1)-5])
             lastx1 = x1
             lines_y1 = []

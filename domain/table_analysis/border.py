@@ -5,10 +5,10 @@ import cv2
 
 # Input : table coordinates [x1,y1,x2,y2]
 # Output : XML Structure for ICDAR 19 single table
-def border(table,image):
-    image_np = image#[table[1]-10:table[3]+10,table[0]-10:table[2]+10]
+def border(table, image, work_folder_path):
+    image_np = image
     imag = image.copy()
-    final = extract_table(image_np,1)
+    final = extract_table(image_np, 1, work_folder_path=work_folder_path)
     if final is None:
         return None
     X = []
@@ -25,13 +25,10 @@ def border(table,image):
 
     X.sort()
     Y.sort()
-    # print("X = ",X)
-    # print("Y = ",Y)
 
     tableXML = etree.Element("table")
     Tcoords = etree.Element("Coords", points=str(table[0])+","+str(table[1])+" "+str(table[2])+","+str(table[3])+" "+str(table[2])+","+str(table[3])+" "+str(table[2])+","+str(table[1]))
     tableXML.append(Tcoords)
-    #cv2.rectangle(imag,(table[0],table[1]),(table[2],table[3]),(0,255,0),2)
     for box in final:
         if box[0]>table[0]-5 and box[1]>table[1]-5 and box[2]<table[2]+5 and box[3]<table[3]+5:
             cellBox = extractText(imag[box[1]:box[3],box[0]:box[4]])
@@ -56,7 +53,5 @@ def border(table,image):
             cell.append(coords)
             tableXML.append(cell)
     ## to visualize the detected text areas
-    cv2.imwrite("temp/detected_cells.png", imag)
+    cv2.imwrite(work_folder_path + "/detected_cells.png", imag)
     return tableXML
-
-# border([111,228,680,480],cv2.imread('cTDaR_t10039.jpg'))

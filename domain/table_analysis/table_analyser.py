@@ -6,6 +6,7 @@ import lxml.etree as etree
 import glob
 import matplotlib.pyplot as plt
 import mmcv
+from pathlib import Path
 
 class TableAnalyser:
 
@@ -26,31 +27,37 @@ class TableAnalyser:
         res_bless = []
         res_cell = []
         root = etree.Element("document")
-        ## for border
+        # for border
         for r in result[0][0]:
             if r[4]>.85:
                 res_border.append(r[:4].astype(int))
-        ## for cells
+        # for cells
         for r in result[0][1]:
             if r[4]>.85:
                 r[4] = r[4]*100
                 res_cell.append(r.astype(int))
-        ## for borderless
+        # for borderless
         for r in result[0][2]:
             if r[4]>.85:
                 res_bless.append(r[:4].astype(int))
-        ## if border tables detected 
-        if len(res_border) != 0:
-            ## call border script for each table in image
-            for res in res_border:
-                try:
-                    root.append(border(res,cv2.imread(img_path)))  
-                except:
-                    pass
-        if len(res_bless) != 0:
-            if len(res_cell) != 0:
-                for no,res in enumerate(res_bless):
-                    root.append(borderless(res,cv2.imread(img_path),res_cell))
+        table_counter = 0
+        # if border tables detected 
+        # call border script for each table in image
+        for res in res_border:
+            try:
+                table_folder = "temp/" + str(table_counter)
+                Path(table_folder).mkdir(parents=True, exist_ok=True)
+                root.append(border(res, cv2.imread(img_path), table_folder))  
+                table_counter += 1
+            except:
+                pass
+        # if borderless tables detected
+        # call borderless script for each table in image
+        for no,res in enumerate(res_bless):
+            table_folder = "temp/" + str(table_counter)
+            Path(table_folder).mkdir(parents=True, exist_ok=True)
+            root.append(borderless(res, cv2.imread(img_path), res_cell, table_folder))
+            table_counter += 1
 
         myfile = open(self.result_path + "/" + "result.xml", "w")
         myfile.write('<?xml version="1.0" encoding="UTF-8"?>\n')

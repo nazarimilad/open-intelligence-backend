@@ -30,7 +30,7 @@ def extractTextBless(img):
 
 ## Input : Roi of Table , Orignal Image, Cells Detected
 ## Output : Returns XML element which has contains bounding box of textchunks
-def borderless(table, image, res_cells):
+def borderless(table, image, res_cells, work_folder_path):
     cells = []
     x_lines = []
     y_lines = []
@@ -205,7 +205,12 @@ def borderless(table, image, res_cells):
     #   cv2.line(im2,(r,table[1]),(r,table[3]),(0,255,0),1)
     # for c in col:
     #   cv2.line(im2,(c,table[1]),(c,table[3]),(0,255,0),1)
-    final = extract_table(image[table[1]:table[3],table[0]:table[2]],0,(y_lines,x_lines))
+    final = extract_table(image[table[1]:table[3], 
+                          table[0]:table[2]],
+                          0,
+                          (y_lines,x_lines),
+                          work_folder_path=work_folder_path 
+                          )
 
     cellBoxes = []
     img4 = image.copy()
@@ -321,11 +326,11 @@ def borderless(table, image, res_cells):
       for tbox in r:
         cv2.rectangle(im2, (tbox[0], tbox[1]), (tbox[2], tbox[3]), colors[no%len(colors)], 1)
         roi = im2[tbox[1]:tbox[3], tbox[0]:tbox[2]]
-        cv2.imwrite("temp/cell_" + str(counter) + ".png", roi)
+        cv2.imwrite(work_folder_path + "/cell_" + str(counter) + ".png", roi)
         counter += 1
         #print(tbox)
 
-    cv2.imwrite("temp/text_chunks.png", im2)
+    cv2.imwrite(work_folder_path + "/text_chunks.png", im2)
     print("text chunks shown")
 
     def rowstart(val):
@@ -370,7 +375,6 @@ def borderless(table, image, res_cells):
     for final in TextChunks:
       counter = 0
       for box in final:
-        cv2.imwrite("temp/cell_" + str(counter) + ".jpg", np.array(box))
         cell = etree.Element("cell")
         end_col,end_row,start_col,start_row = colend(box[2]),rowend(box[3]),colstart(box[0]),rowstart(box[1])
         cell.set("end-col",str(end_col))
