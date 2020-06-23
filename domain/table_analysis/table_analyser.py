@@ -22,7 +22,7 @@ class TableAnalyser:
         img = show_result(img_path, result, ('Bordered', 'cell', 'Borderless'), score_thr=0.7, show=False)
         plt.figure(figsize=(15, 10))
         plt.imshow(mmcv.bgr2rgb(img))
-        plt.savefig("temp/detected_table.png", bbox_inches="tight", pad_inches=0)
+        plt.savefig(self.result_path + "/detected_table.png", bbox_inches="tight", pad_inches=0)
         res_border = []
         res_bless = []
         res_cell = []
@@ -45,7 +45,7 @@ class TableAnalyser:
         # call border script for each table in image
         for res in res_border:
             try:
-                table_folder = "temp/" + str(table_counter)
+                table_folder = self.result_path + "/" + str(table_counter)
                 Path(table_folder).mkdir(parents=True, exist_ok=True)
                 root.append(border(res, cv2.imread(img_path), table_folder))  
                 table_counter += 1
@@ -54,7 +54,7 @@ class TableAnalyser:
         # if borderless tables detected
         # call borderless script for each table in image
         for no,res in enumerate(res_bless):
-            table_folder = "temp/" + str(table_counter)
+            table_folder = self.result_path + "/" + str(table_counter)
             Path(table_folder).mkdir(parents=True, exist_ok=True)
             root.append(borderless(res, cv2.imread(img_path), res_cell, table_folder))
             table_counter += 1
