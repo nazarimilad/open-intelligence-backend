@@ -326,7 +326,7 @@ def borderless(table, image, res_cells, work_folder_path):
       for tbox in r:
         cv2.rectangle(im2, (tbox[0], tbox[1]), (tbox[2], tbox[3]), colors[no%len(colors)], 1)
         roi = im2[tbox[1]:tbox[3], tbox[0]:tbox[2]]
-        cv2.imwrite(work_folder_path + "/cell_" + str(counter) + ".png", roi)
+        cv2.imwrite(work_folder_path + "/cell_" + str(counter) + ".png", roi, [cv2.IMWRITE_PNG_COMPRESSION, 0])
         counter += 1
         #print(tbox)
 
