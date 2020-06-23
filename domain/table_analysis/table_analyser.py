@@ -22,7 +22,7 @@ class TableAnalyser:
         img = show_result(img_path, result, ('Bordered', 'cell', 'Borderless'), score_thr=0.7, show=False)
         plt.figure(figsize=(15, 10))
         plt.imshow(mmcv.bgr2rgb(img))
-        plt.savefig(self.result_path + "/detected_table.png", bbox_inches="tight", pad_inches=0)
+        plt.savefig(self.result_path + "/detected_tables.png", bbox_inches="tight", pad_inches=0)
         res_border = []
         res_bless = []
         res_cell = []

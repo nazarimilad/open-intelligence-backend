@@ -6,10 +6,10 @@ from flask_restful import Resource, Api
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
-#from domain.table_analysis.table_analyser import TableAnalyser
+from domain.table_analysis.table_analyser import TableAnalyser
 
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg",])
-host = "localhost"
+host = "192.168.1.7"
 port = 5000
 app = Flask(__name__, static_folder="temp", static_url_path='/assets')
 app.config["UPLOAD_FOLDER"] = "./temp"
@@ -23,12 +23,10 @@ api = Api(app)
 
 def prepare_server():
     Path(app.config["UPLOAD_FOLDER"]).mkdir(parents=True, exist_ok=True)
-    """
     global table_analyser
     table_analyser = TableAnalyser("domain/config/cascade_mask_rcnn_hrnetv2p_w32_20e.py",
                                    "domain/table_analysis/model/epoch_36.pth",
                                    app.config["UPLOAD_FOLDER"])
-                                   """
 
 def remove_content(folder):
     for filename in os.listdir(folder):
@@ -69,9 +67,9 @@ def analyse_table():
         file, filename = validate_file(request)
     except ValueError as err:
         return {"error": str(err)}
-    # remove_content(app.config["UPLOAD_FOLDER"])
+    remove_content(app.config["UPLOAD_FOLDER"])
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-    # table_analyser.analyse(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    table_analyser.analyse(os.path.join(app.config["UPLOAD_FOLDER"], filename))
     url = "http://" + host + ":" + str(port) + "/assets/"
     return {
         "original": url + filename,
@@ -82,6 +80,5 @@ def analyse_table():
 if __name__ == "__main__":
     prepare_server()
     app.run(debug=True, host=host, port=port)
-    #app.run(debug=True)
 
 

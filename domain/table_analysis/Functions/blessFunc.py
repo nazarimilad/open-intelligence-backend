@@ -25,7 +25,7 @@ def extractTextBless(img):
         x, y, w, h = cv2.boundingRect(cnt) 
         if(h<6) or w<4 or h/img.shape[0]>0.95 or h>30: 
           continue
-        return_arr.append([x-7, y-7, w, h])
+        return_arr.append([x-10, y-10, w+4, h+4])
     return return_arr
 
 ## Input : Roi of Table , Orignal Image, Cells Detected
