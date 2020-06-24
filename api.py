@@ -7,6 +7,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from pathlib import Path
 from domain.table_analysis.table_analyser import TableAnalyser
+from domain.ocr import ocr
+from domain.preprocessing import preprocessor
 
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg",])
 host = "192.168.1.7"
@@ -68,13 +70,23 @@ def analyse_table():
     except ValueError as err:
         return {"error": str(err)}
     remove_content(app.config["UPLOAD_FOLDER"])
-    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-    table_analyser.analyse(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], "original.png"))
+    preprocessor.preprocess(
+        os.path.join(app.config["UPLOAD_FOLDER"], "original.png"),
+        app.config["UPLOAD_FOLDER"]
+    )
+    table_analyser.analyse(os.path.join(app.config["UPLOAD_FOLDER"], "preprocessed.png"))
     url = "http://" + host + ":" + str(port) + "/assets/"
+    tables = list()
+    tables = ocr.process_xml(
+        os.path.join(app.config["UPLOAD_FOLDER"], "result.xml"),
+        os.path.join(app.config["UPLOAD_FOLDER"], "preprocessed.png")
+    )
     return {
-        "original": url + filename,
+        "original": url + "original.png",
         "detected tables": url + "detected_tables.png",
-        "xml_result": url + "result.xml"
+        "xml_result": url + "result.xml",
+        "tables": tables
     }
 
 if __name__ == "__main__":

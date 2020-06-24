@@ -21,6 +21,7 @@ class TableAnalyser:
         result = inference_detector(self.model, img_path)
         img = show_result(img_path, result, ('Bordered', 'cell', 'Borderless'), score_thr=0.7, show=False)
         plt.figure(figsize=(15, 10))
+        plt.axis("off")
         plt.imshow(mmcv.bgr2rgb(img))
         plt.savefig(self.result_path + "/detected_tables.png", bbox_inches="tight", pad_inches=0)
         res_border = []
