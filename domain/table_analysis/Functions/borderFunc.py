@@ -49,7 +49,10 @@ def extract_table(table_body,__line__,lines=None, work_folder_path=None):
     for point in points:
         for x,y in point:
             cv2.line(table,(x,y),(x,y),(0,0,255),8)
-
+    print("work folder path:")
+    print(work_folder_path)
+    print("table: ")
+    print(table)
     cv2.imwrite(work_folder_path + "/intersections.png", table)
 
     # boxno = -1
@@ -161,6 +164,6 @@ def extractText(img):
         # Drawing a rectangle on copied image 
         # rect = cv2.rectangle(im2, (mx+1, my), (mw-2, mh-2), (0, 255, 0), 1)
         # cv2_imshow(im2)
-        return mx,my,mw,mh
+        return mx-2, my-2, mw+2, mh+2
     else :
         return None

@@ -219,7 +219,7 @@ def borderless(table, image, res_cells, work_folder_path):
         for cell in cellBox:
             cellBoxes.append([box[0]+cell[0], box[1]+cell[1], cell[2], cell[3]])
             cv2.rectangle(img4, (box[0]+cell[0], box[1]+cell[1]), (box[0]+cell[0]+cell[2], box[1]+cell[1]+cell[3]), (255,0,0), 2)
-    # cv2_imshow(img4)
+    cv2.imwrite("im4.png", img4)
 
     the_last_y = -1
     cellBoxes = sorted(cellBoxes,key=lambda x: x[1])
