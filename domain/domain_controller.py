@@ -10,7 +10,7 @@ class DomainController:
         self.work_path = work_path
         self.table_detector = TableDetector(
             detector_config_path,
-            detector_config_path,
+            detector_model_path,
             self.work_path
         )
     

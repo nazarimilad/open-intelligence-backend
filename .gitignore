@@ -214,4 +214,4 @@ dmypy.json
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,flask
 
 temp/*
-domain/table_analysis/model/*
+domain/table_detection/model/*
