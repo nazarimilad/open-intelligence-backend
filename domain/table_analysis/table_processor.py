@@ -63,6 +63,7 @@ class TableProcessor(ABC):
         table = pd.DataFrame(data=data[1:], columns=data[0])
         table = table.dropna(axis=1, how='all')
         table = table.dropna(axis=0, how='all')
+        print(table.head(50))
         return table
 
     def aggregate_text_boxes(self, text_boxes):

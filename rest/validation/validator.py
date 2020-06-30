@@ -1,8 +1,10 @@
 from flask import Flask, request, flash
+from werkzeug.utils import secure_filename
 
 class Validator:
 
-    def _is_file_extension_allowed(self, filename):
+    @staticmethod
+    def _is_file_extension_allowed(filename):
         ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg",])
         return "." in filename and \
             filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -19,7 +21,7 @@ class Validator:
         if not file or file.filename == "":
             flash("No selected file")
             raise ValueError("File name is not valid")
-        if not is_file_extension_allowed(file.filename):
+        if not Validator._is_file_extension_allowed(file.filename):
             flash("Invalid extension")
             raise ValueError("File name is not valid")
         filename = secure_filename(file.filename)

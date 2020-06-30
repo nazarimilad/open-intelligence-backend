@@ -22,12 +22,12 @@ class BorderedTableProcessor(TableProcessor):
         # cv2.imwrite(f"./temp/preprocssed_image_c_after_eroding.png", preprocessed_image)
         line_detector = LineDetector()
         horiz_lines, vert_lines = line_detector.detect_lines(preprocessed_image, text_boxes)
-        text_boxes = self.assign_rows(horiz_lines, text_boxes)
-        text_boxes = self.assign_columns(vert_lines, text_boxes)
+        text_boxes = self._assign_rows(horiz_lines, text_boxes)
+        text_boxes = self._assign_columns(vert_lines, text_boxes)
         table = self.text_boxes_to_table(text_boxes)
         return table
 
-    def assign_rows(self, horiz_lines, text_boxes):
+    def _assign_rows(self, horiz_lines, text_boxes):
         row_ranges = list()
         for index, horiz_line in enumerate(horiz_lines[:len(horiz_lines) - 1]):
             x1, y1, x2, y2 = tuple(horiz_line)
@@ -44,7 +44,7 @@ class BorderedTableProcessor(TableProcessor):
         text_boxes["row"] = row_indexes
         return text_boxes
         
-    def assign_columns(self, vert_lines, text_boxes):
+    def _assign_columns(self, vert_lines, text_boxes):
         column_ranges = list()
         for index, vert_line in enumerate(vert_lines[:len(vert_lines) - 1]):
             x1, y1, x2, y2 = tuple(vert_line)
@@ -53,12 +53,13 @@ class BorderedTableProcessor(TableProcessor):
         column_indexes = list()
         for left in left_values:
             was_appended = False
+            index = 0
             for index, (min, max) in enumerate(column_ranges):
                 if left <= max:
                     column_indexes.append(index)
                     was_appended = True
                     break
-            else:
+            if not was_appended:
                 column_indexes.append(index)
         text_boxes["column"] = column_indexes
         return text_boxes

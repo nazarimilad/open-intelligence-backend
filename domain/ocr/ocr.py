@@ -39,7 +39,7 @@ def add_rectangle(image, x1, y1, x2, y2):
         image,
         (x1, y1), (x2, y2),
         (component(),component(),component()),
-        1
+        2
     )
     return image
     

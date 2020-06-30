@@ -7,18 +7,18 @@ class LineDetector:
 
     def detect_lines(self, image, text_boxes, line_type=None):
         image_2 = image.copy()
-        horiz_lines, vert_lines = self.find_lines(image, text_boxes, line_type)
-        # horiz_lines, vert_lines = self.remove_lines_on_text(horiz_lines, vert_lines, text_boxes)
-        horiz_lines, vert_lines = self.add_border_lines(horiz_lines, vert_lines, text_boxes)
-        horiz_lines, vert_lines = self.extend_lines(horiz_lines, vert_lines)
-        horiz_lines, vert_lines = self.merge_nearby_lines(horiz_lines, vert_lines)
+        horiz_lines, vert_lines = self._find_lines(image, text_boxes, line_type)
+        # horiz_lines, vert_lines = self._remove_lines_on_text(horiz_lines, vert_lines, text_boxes)
+        horiz_lines, vert_lines = self._add_border_lines(horiz_lines, vert_lines, text_boxes)
+        horiz_lines, vert_lines = self._extend_lines(horiz_lines, vert_lines)
+        horiz_lines, vert_lines = self._merge_nearby_lines(horiz_lines, vert_lines)
         # self.show_lines(horiz_lines, vert_lines, image)
         # horiz_lines2, vert_lines2 = line_detection(image_2)
         # self.show_lines(horiz_lines2, vert_lines2, image_2)
         return horiz_lines, vert_lines
 
-    def find_lines(self, image, text_boxes, line_type=None):
-        image = self.remove_detected_text_from_image(image, text_boxes)
+    def _find_lines(self, image, text_boxes, line_type=None):
+        image = self._remove_detected_text_from_image(image, text_boxes)
         # cv2.imshow("before:", image)
         # cv2.waitKey()
         # image = cv2.adaptiveThreshold(image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 15, 1)
@@ -34,16 +34,16 @@ class LineDetector:
         horiz_lines = list()
         vert_lines = list()
         if line_type is None:
-            horiz_lines = self.find_lines_of_type(image, "horizontal", 20, 150)
-            vert_lines = self.find_lines_of_type(image, "vertical", 20, 150)
+            horiz_lines = self._find_lines_of_type(image, "horizontal", 20, 150)
+            vert_lines = self._find_lines_of_type(image, "vertical", 20, 100)
         else:
             if line_type == "horizontal":
-                horiz_lines = self.find_lines_of_type(image, "horizontal", 20, 150)
+                horiz_lines = self._find_lines_of_type(image, "horizontal", 20, 150)
             elif line_type == "vertical":
-                vert_lines = self.find_lines_of_type(image, "vertical", 20, 150)
+                vert_lines = self._find_lines_of_type(image, "vertical", 20, 150)
         return horiz_lines, vert_lines
 
-    def remove_detected_text_from_image(self, image, text_boxes):
+    def _remove_detected_text_from_image(self, image, text_boxes):
         if text_boxes.empty:
             return image
         image_text_boxes_removed = image.copy()
@@ -55,7 +55,7 @@ class LineDetector:
                 (255, 255, 255), -1)
         return image_text_boxes_removed
 
-    def find_lines_of_type(self, image, type, edges_low_threshold, threshold_hough_lines):
+    def _find_lines_of_type(self, image, type, edges_low_threshold, threshold_hough_lines):
         kernel_size = 5
         blur_gray = cv2.GaussianBlur(image,(kernel_size, kernel_size),0)
         edges = cv2.Canny(blur_gray, edges_low_threshold, edges_low_threshold*3)
@@ -101,7 +101,7 @@ class LineDetector:
             filtered_lines = sorted(filtered_lines, key=lambda tup: tup[0])
         return filtered_lines
 
-    def remove_lines_on_text(self, horiz_lines, vert_lines, text_boxes):
+    def _remove_lines_on_text(self, horiz_lines, vert_lines, text_boxes):
         if text_boxes.empty:
             return horiz_lines, vert_lines
         filtered_horiz_lines = list()
@@ -112,7 +112,7 @@ class LineDetector:
                 filtered_horiz_lines.append((x1, y1, x2, y2))
         return filtered_horiz_lines, vert_lines
 
-    def add_border_lines(self, horiz_lines, vert_lines, text_boxes):
+    def _add_border_lines(self, horiz_lines, vert_lines, text_boxes):
         if text_boxes.empty:
             return horiz_lines, vert_lines
         padding_between_words_and_line = 2
@@ -167,7 +167,7 @@ class LineDetector:
                 vert_lines.append(new_vert_line)
         return horiz_lines, vert_lines
 
-    def extend_lines(self, horiz_lines, vert_lines):
+    def _extend_lines(self, horiz_lines, vert_lines):
         all_lines = [*horiz_lines, *vert_lines]
         if len(all_lines) > 0:
             lowest_x1 = all_lines[0][0]
@@ -191,7 +191,7 @@ class LineDetector:
 
         return horiz_lines, vert_lines
     
-    def merge_nearby_lines(self, horiz_lines, vert_lines, line_fusion_threshold_px=10):
+    def _merge_nearby_lines(self, horiz_lines, vert_lines, line_fusion_threshold_px=10):
         horiz_lines_merged = horiz_lines
         if len(horiz_lines_merged) > 0:
             for i in range(10):

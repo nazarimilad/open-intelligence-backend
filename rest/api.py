@@ -3,7 +3,6 @@ import glob
 import shutil
 from flask import Flask, request, flash
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
 from pathlib import Path
 from domain.domain_controller import DomainController
 from rest.validation.validator import Validator
@@ -23,7 +22,10 @@ class Server:
         self.app.run(debug=True, host=self.host, port=self.port)
 
     def _init_app(self, host, port, work_path):
-        app = Flask(__name__, static_folder=work_path, static_url_path='/assets')
+        app = Flask(__name__, 
+                    static_folder=f"../{work_path[2:]}",
+                    static_url_path="/assets"
+        )
         app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
         app.config["SECRET_KEY"] = "pojzdoandoiaxuqpsokmqd"
         app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -38,7 +40,7 @@ class Server:
                 return {"error": str(err)}
             self._remove_content(self.work_path)
             file.save(os.path.join(self.work_path, "original.png"))
-            table = domain_controller.get_tables()
+            tables = self.domain_controller.get_tables()
             return {
                 "original": self.assets_url + "original.png",
                 "detected tables": self.assets_url + "detected_tables.png",

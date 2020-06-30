@@ -331,7 +331,6 @@ def borderless(table, image, res_cells, work_folder_path):
         #print(tbox)
 
     cv2.imwrite(work_folder_path + "/text_chunks.png", im2)
-    print("text chunks shown")
 
     def rowstart(val):
       r = 0

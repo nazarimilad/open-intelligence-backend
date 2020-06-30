@@ -43,6 +43,7 @@ class TableDetector:
             if r[4]>.85:
                 res_bless.append(r[:4].astype(int))
         table_counter = 0
+        detected_tables = list()
         # if border tables detected 
         # call border script for each table in image
         for no, res in enumerate(res_border):
@@ -53,7 +54,13 @@ class TableDetector:
             filename_bordered_table = table_folder + "/detected_bordered_table.png"
             cv2.imwrite(filename_bordered_table, table_cropped)
             root.append(border(res, cv2.imread(img_path), table_folder))  
+            detected_tables_result = {
+                "table_type": "bordered",
+                "image_path": filename_bordered_table
+            }
+            detected_tables.append(detected_tables_result)
             table_counter += 1
+
         # if borderless tables detected
         # call borderless script for each table in image
         for no, res in enumerate(res_bless):
@@ -64,9 +71,16 @@ class TableDetector:
             filename_borderless_table = table_folder + "/detected_borderless_table.png"
             cv2.imwrite(filename_borderless_table, table_cropped)
             root.append(borderless(res, cv2.imread(img_path), res_cell, table_folder))
+            detected_tables_result = {
+                "table_type": "borderless",
+                "image_path": filename_borderless_table
+            }
+            detected_tables.append(detected_tables_result)
             table_counter += 1
 
         myfile = open(self.result_path + "/" + "result.xml", "w")
         myfile.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         myfile.write(etree.tostring(root, pretty_print=True,encoding="unicode"))
         myfile.close()
+        
+        return detected_tables

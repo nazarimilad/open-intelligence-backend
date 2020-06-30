@@ -49,10 +49,6 @@ def extract_table(table_body,__line__,lines=None, work_folder_path=None):
     for point in points:
         for x,y in point:
             cv2.line(table,(x,y),(x,y),(0,0,255),8)
-    print("work folder path:")
-    print(work_folder_path)
-    print("table: ")
-    print(table)
     cv2.imwrite(work_folder_path + "/intersections.png", table)
 
     # boxno = -1

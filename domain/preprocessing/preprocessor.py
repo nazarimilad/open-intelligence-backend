@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-def add_padding(bordersize, image):
+def _add_padding(bordersize, image):
     row, col = image.shape[:2]
     bottom = image[row-2:row, 0:col]
     mean = cv2.mean(bottom)[0]
@@ -17,5 +17,5 @@ def add_padding(bordersize, image):
 
 def preprocess(image_path, write_directory):
     image = cv2.imread(image_path)
-    image = add_padding(bordersize=300, image=image)
+    image = _add_padding(bordersize=300, image=image)
     cv2.imwrite(write_directory + "/preprocessed.png", image)

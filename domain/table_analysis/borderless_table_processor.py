@@ -13,13 +13,13 @@ class BorderlessTableProcessor(TableProcessor):
         original_image = cv2.imread(image_path)
         preprocessed_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
         text_boxes = self.get_text_boxes(preprocessed_image)
-        text_boxes = self.assign_rows(text_boxes)
-        text_boxes = self.assign_columns(text_boxes)
-        text_boxes = self.split_columns_on_vert_lines(preprocessed_image, text_boxes)
+        text_boxes = self._assign_rows(text_boxes)
+        text_boxes = self._assign_columns(text_boxes)
+        text_boxes = self._split_columns_on_vert_lines(preprocessed_image, text_boxes)
         table = self.text_boxes_to_table(text_boxes)
         return table
 
-    def assign_rows(self, text_boxes):
+    def _assign_rows(self, text_boxes):
         max_dist_rows = 10
         row_indexes = self.get_clustering_indexes(
             text_boxes[["y_middle"]].values, 
@@ -28,7 +28,7 @@ class BorderlessTableProcessor(TableProcessor):
         text_boxes["row"] = row_indexes
         return text_boxes
 
-    def assign_columns(self, text_boxes):
+    def _assign_columns(self, text_boxes):
         max_dist_columns = 60
         columns_indexes = self.get_clustering_indexes(
             text_boxes[["x_middle"]].values, 
@@ -52,7 +52,7 @@ class BorderlessTableProcessor(TableProcessor):
         ]
         return indexes
 
-    def split_columns_on_vert_lines(self, image, text_boxes):
+    def _split_columns_on_vert_lines(self, image, text_boxes):
         line_detector = LineDetector()
         _, vert_lines = line_detector.detect_lines(image, text_boxes, "vertical")
         text_boxes_columns = [x for _, x in text_boxes.groupby("column")]
