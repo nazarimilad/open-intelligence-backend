@@ -1,4 +1,4 @@
-from domain.table_analysis.Functions.borderFunc import extract_table
+from domain.table_detection.Functions.borderFunc import extract_table
 import numpy as np
 import cv2
 from lxml import etree

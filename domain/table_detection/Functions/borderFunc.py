@@ -1,4 +1,4 @@
-from domain.table_analysis.Functions.line_detection import line_detection
+from domain.table_detection.Functions.line_detection import line_detection
 import cv2
 
 ##################  Functions required for Border table Recognition #################

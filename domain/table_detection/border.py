@@ -1,5 +1,5 @@
 
-from domain.table_analysis.Functions.borderFunc import extract_table, extractText,span
+from domain.table_detection.Functions.borderFunc import extract_table, extractText,span
 import lxml.etree as etree
 import cv2
 
