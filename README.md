@@ -16,7 +16,7 @@ Contributions are also welcome!
 
 Wouldn't it be great if you could take a screenshot of a table on a website for example and automatically be able to paste the table data of the screenshot image into your spreadsheet software? 
 
-![Demonstration](documentation/recording.gif)
+![Demonstration](documentation/demo.gif)
 
 This is what table detection and transformation is about.
 
