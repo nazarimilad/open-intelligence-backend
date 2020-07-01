@@ -73,7 +73,7 @@ Note: the machine learning model CascadeTabNet is using, was created using the o
 
 ### Extra information
 
-* If you need a simple front end, [this one](https://github.com/nazarimilad/open-intelligence-frontend) will do the trick. 
+* The code for the front end, as seen in [the demo gif](https://github.com/nazarimilad/open-intelligence-backend/blob/master/documentation/demo.gif), can be found [here](https://github.com/nazarimilad/open-intelligence-frontend)
 
 * The server will listen on default port 5000. You can change the host and port in `main.py`
 

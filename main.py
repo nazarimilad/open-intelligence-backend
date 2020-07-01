@@ -3,7 +3,7 @@ from rest.api import Server
 
 
 if __name__ == "__main__":
-    host = "192.168.1.7"
+    host = "localhost"
     port = 5000
     server_path = "./temp"
     detector_config_path = "domain/table_detection/config/cascade_mask_rcnn_hrnetv2p_w32_20e.py"
