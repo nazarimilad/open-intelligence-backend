@@ -66,26 +66,38 @@ In a borderless table, since there are no borders for every cell, the spacing be
 * Cuda 10.0 or higher (for table detection)
 * Linux or MacOS (please don't try it on Windows, it won't work, save yourself a few hours of vainless pain)
 
-If you don't need the table detection, then you won't need a GPU and you will be able to use the software on Windows too. 
+If you don't need the table detection, then you won't need a GPU and you will be able to use the software on Windows too (see Note).
 
 ### Installation instructions
 
 1. Install MMdetection, based on the instructions provided in the README.md in [CascadeTabNet](https://github.com/DevashishPrasad/CascadeTabNet). Cuda 10.0 is mentioned in the installation section, but Cuda 11.0 works just as fine. 
 Note: the machine learning model CascadeTabNet is using, was created using the old 1.2 version of MMdetection. I would appreciate it if someone could recreate the model with the current version 2 of MMdetection, which does not support models created with version 1.x. The nice thing about version 2 of MMdetection is that it supports inference without GPU!  
 
-2. `git clone https://github.com/nazarimilad/open-intelligence-backend`
+2. Clone the respository: `git clone https://github.com/nazarimilad/open-intelligence-backend`
 
-3. `cd open-intelligence-backend`
+3. Go to the cloned repository: `cd open-intelligence-backend`
 
-4. Create a new Python virtual environmnent and activate it
+4. Create a new Python virtual environmnent: `python3 -m venv env`
 
-5. Install the requirements. I know, I need to make a `requirements.txt` but I don't have the time currently.
+5. Activate the new virtual environment: `source env/bin/activate`
+
+5. Install the requirements: `pip3 install -r requirements.txt`
 
 6. Start the server with `python3 main.py`
 
 7. ???
 
 8. Profit
+
+9. When you don't need the software anymore, you can deactivate the environment: `deactivate`
+
+### Note
+
+If you already have the image of an isolated table, then you can use the structure analysis and transformation code directly:
+
+`python3 table_transformer.py --table-type borderless -i datasets/all_tables/2.png`
+
+![command line](documentation/command_line.png)
 
 ## Extra information
 
