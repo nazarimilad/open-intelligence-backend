@@ -1,5 +1,5 @@
 Flask==1.1.2
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 matplotlib==3.2.2
 numpy==1.18.4
 opencv-contrib-python==4.2.0.34
